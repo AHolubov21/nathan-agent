@@ -1,0 +1,32 @@
+# OpenAI Configuration
+
+openai:
+  # API endpoint for making calls to OpenAI
+  endpoint: "https://api.openai.com/v1/engines/davinci-codex"
+
+  # Your OpenAI API Key
+  api_key: "${env:OPENAI_API_KEY}"  # Use environment variable for the OpenAI API key
+
+  # Default parameters for API calls
+  default_params:
+    max_tokens: 150
+    temperature: 0.7
+    top_p: 1
+    frequency_penalty: 0
+    presence_penalty: 0
+    stop: ["\n"]
+
+  # Default prompt for generating responses to alerts
+  prompt_template: "Given the following alert information: {alert_info}, provide the best course of action based on the runbook instructions: {runbook_instructions}"
+
+  # Optional settings
+  headers:
+    Content-Type: "application/json"
+    Authorization: "Bearer ${api_key}"  # Use the variable directly in the header
+
+  # Model settings
+  model:
+    name: "davinci-codex"  # The model to use for generating responses
+    version: "latest"  # The version of the model to use
+
+  # Any other specific configuration or parameters you want to use by default for your OpenAI interactions can be added here.

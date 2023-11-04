@@ -1,0 +1,33 @@
+# Nathan's Slack Configuration
+
+# Slack API Token
+api_token: "${env:SLACK_BOT_TOKEN}"
+
+# Channels
+monitoring_channel: 
+  id: "${env:SLACK_MONITORING_CHANNEL_ID}"  # Environment variable for monitoring channel ID
+  name: "monitoring-alerts"
+
+noc_team_channel: 
+  id: "${env:SLACK_NOC_TEAM_CHANNEL_ID}"  # Environment variable for NOC team channel ID
+  name: "noc-team"
+
+# WebSockets
+websocket_url: "${env:SLACK_WEBSOCKET_URL}"  # Environment variable for WebSocket URL
+ping_interval: 30  # In seconds
+
+# Message Templates
+alert_message_template: "Alert received: {alert_name} with priority {priority}."
+escalation_message_template: "Hey @{user}, there seems to be an issue with {alert_name}. Here's what I found: {details}. Could you take a look, please?"
+resolution_message_template: "Good news! The alert {alert_name} has been resolved."
+
+# Thresholds and Rules
+medium_priority_threshold: 5  # Number of medium priority alerts before escalation
+high_priority_threshold: 3   # Number of high priority alerts before escalation
+
+# Emoji Reactions
+reaction_resolved: "white_check_mark"
+reaction_escalated: "arrow_up"
+reaction_waiting: "hourglass_flowing_sand"
+
+# Other custom configurations related to Slack can be added as needed.

@@ -1,0 +1,35 @@
+# Nathan's Monitoring Systems Configuration
+
+# Monitoring System 1 (e.g., Prometheus)
+prometheus:
+  endpoint: "http://prometheus.yourdomain.com"  # Replace with your actual Prometheus endpoint
+  auth:
+    username: "${PROMETHEUS_USERNAME}"  # Use environment variable or secret management
+    password: "${PROMETHEUS_PASSWORD}"  # Use environment variable or secret management
+  query_endpoint: "/api/v1/query"
+  alert_endpoint: "/api/v1/alerts"
+  headers:
+    Content-Type: "application/json"
+
+# Monitoring System 2 (e.g., Grafana)
+grafana:
+  endpoint: "http://grafana.yourdomain.com"  # Replace with your actual Grafana endpoint
+  auth:
+    api_token: "${GRAFANA_API_TOKEN}"  # Use environment variable or secret management
+  dashboard_url: "/dashboard"
+  alert_endpoint: "/api/alerts"
+  headers:
+    Content-Type: "application/json"
+    Authorization: "Bearer {api_token}"
+
+# Monitoring System 3 (e.g., Zabbix)
+zabbix:
+  endpoint: "http://zabbix.yourdomain.com"  # Replace with your actual Zabbix endpoint
+  auth:
+    username: "${ZABBIX_USERNAME}"  # Use environment variable or secret management
+    password: "${ZABBIX_PASSWORD}"  # Use environment variable or secret management
+  item_endpoint: "/api_jsonrpc.php"
+  headers:
+    Content-Type: "application/json-rpc"
+
+# Add any additional monitoring systems or configurations as needed.

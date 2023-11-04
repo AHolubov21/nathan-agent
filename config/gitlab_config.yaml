@@ -1,0 +1,30 @@
+# GitLab Configuration
+
+gitlab:
+  # Base URL for the GitLab instance
+  base_url: "https://gitlab.yourdomain.com"  # Replace with your actual GitLab instance URL
+  
+  # Personal Access Token for authentication
+  access_token: "${GITLAB_ACCESS_TOKEN}"  # Use environment variable or secret management
+  
+  # Project ID where the runbooks are stored
+  project_id: "123456"  # Replace with your actual project ID
+  
+  # Repository configuration
+  repository:
+    name: "runbooks-repo"  # Replace with your actual repository name
+    branch: "master"  # Default branch to fetch runbooks from
+  
+  # File paths within the repository
+  file_paths:
+    runbook: "runbooks/alert_runbook.md"  # Path to the runbook file
+  
+  # API endpoints
+  api_endpoints:
+    repository_files: "/api/v4/projects/{project_id}/repository/files/{file_path}"
+    commits: "/api/v4/projects/{project_id}/repository/commits"
+  
+  # Headers for API requests
+  headers:
+    Private-Token: "{access_token}"
+    Content-Type: "application/json"

@@ -1,0 +1,68 @@
+service: nathan-slack-bot
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: ${opt:stage, 'dev'}
+  region: us-west-2  # Updated to match DynamoDB config
+  environment:
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    GITLAB_API_TOKEN: ${env:GITLAB_API_TOKEN}
+    GITLAB_PROJECT_ID: ${env:GITLAB_PROJECT_ID}
+    GITLAB_FILE_PATH: ${env:GITLAB_FILE_PATH}
+    DYNAMODB_ENDPOINT: ${file(config/dynamodb_config.yaml):endpoint}
+    DYNAMODB_REGION: ${self:provider.region}  # Added for consistency with handler.py
+  iamRoleStatements:  # Updated to use the new syntax
+    - Effect: "Allow"
+      Action:
+        - "lambda:InvokeFunction"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ALERTS_TABLE_NAME}"
+    - Effect: "Allow"
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "arn:aws:logs:${self:provider.region}:*:log-group:/aws/lambda/${self:service}-${self:provider.stage}:*"
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::your-s3-bucket-name/*"  # Specify your S3 bucket name
+
+functions:
+  slackEventHandler:
+    handler: handler.lambda_handler
+    events:
+      - http:
+          path: slack/events
+          method: post
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+    useDownloadCache: true
+    useStaticCache: true
+    slim: true
+    strip: false
+    layer:
+      name: ${self:provider.stage}-dependencies-layer
+      description: "Python requirements lambda layer for Nathan Slack Bot"
+      compatibleRuntimes:
+        - python3.9
+      allowedAccounts:
+        - '*'
